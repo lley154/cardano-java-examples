@@ -16,33 +16,36 @@ repositories {
 }
 
 dependencies {
-    // Use JUnit Jupiter for testing.
-    testImplementation(libs.junit.jupiter)
-
-    testRuntimeOnly("org.junit.platform:junit-platform-launcher")
-
+    
     // This dependency is used by the application.
     implementation(libs.guava)
 
     // cardano-client-lib
-    testImplementation(libs.cardano.client.lib)
+    implementation(libs.cardano.client.lib)
 
     // cardano-client-backend
-    testImplementation(libs.cardano.client.backend)
+    implementation(libs.cardano.client.backend)
 
     // cardano-client-backend-ogmios
-    testImplementation(libs.cardano.client.backend.ogmios)
+    implementation(libs.cardano.client.backend.ogmios)
+
+    // aiken-java-binding
+    implementation(libs.aiken.java.binding)
 
     // slf4j
-    testImplementation("org.slf4j:slf4j-simple:2.0.7")
+    implementation("org.slf4j:slf4j-simple:2.0.7")
+
+    // Use JUnit Jupiter for testing.
+    testImplementation(libs.junit.jupiter)
+    testRuntimeOnly("org.junit.platform:junit-platform-launcher")
+
+    // lombok
     testCompileOnly("org.projectlombok:lombok:1.18.24")
     testAnnotationProcessor("org.projectlombok:lombok:1.18.24")
 
     // yaci-cardano-test
     testImplementation(libs.yaci.cardano.test)
-
-    // aiken-java-binding
-    testImplementation(libs.aiken.java.binding)
+    
 }
 
 // Apply a specific Java toolchain to ease working on different environments.
