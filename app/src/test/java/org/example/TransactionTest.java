@@ -53,11 +53,11 @@ public class TransactionTest {
     @Test
     void transfer_lovelace() throws Exception {
         String senderAddress = senderAccount.baseAddress();
-        log.info("Sender address : " + senderAddress);
+        System.out.println("Sender address: " + senderAddress);
         System.out.println("sender balance before: " + testHelper.lovelaceBalance(senderAddress));
 
         String receiverAddress = receiverAccount.baseAddress();
-        log.info("Receiver address : " + receiverAddress);
+        System.out.println("Receiver address: " + receiverAddress);
         receiverBalanceBefore = testHelper.lovelaceBalance(receiverAddress);
         System.out.println("receiver balance before: " + receiverBalanceBefore);
 
@@ -77,7 +77,7 @@ public class TransactionTest {
         System.out.println("Signed transaction: " + JsonUtil.getPrettyJson(signedTransaction));
         Result<String> result = transactionService.submitTransaction(signedTransaction.serialize());
         Thread.sleep(2000);
-        System.out.println("Transaction result: " + JsonUtil.getPrettyJson(result));
+        log.info("transfer_lovelace: " + JsonUtil.getPrettyJson(result));
         System.out.println("receiver after: " + testHelper.lovelaceBalance(receiverAddress));
 
         // Add assertion to verify the transaction

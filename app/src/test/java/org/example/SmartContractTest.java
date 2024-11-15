@@ -39,7 +39,7 @@ use aiken/crypto.{VerificationKeyHash}
 use cardano/transaction.{OutputReference, Transaction}
  
 pub type Datum {
-  owner: VerificationKeyHash,
+  beneficiary: VerificationKeyHash,
 }
  
 pub type Redeemer {
@@ -53,9 +53,9 @@ validator hello_world {
     _own_ref: OutputReference,
     self: Transaction,
   ) {
-    expect Some(Datum { owner }) = datum
+    expect Some(Datum { beneficiary }) = datum
     let must_say_hello = redeemer.msg == "Hello, World!"
-    let must_be_signed = list.has(self.extra_signatories, owner)
+    let must_be_signed = list.has(self.extra_signatories, beneficiary)
     must_say_hello && must_be_signed
   }
 }
@@ -69,7 +69,7 @@ public class SmartContractTest {
     private static Account senderAccount = new Account(Networks.testnet(), senderMnemonic);
     private static String receiverMnemonic = "essence pilot click armor alpha noise mixture soldier able advice multiply inject ticket pride airport uncover honey desert curtain sun true toast valve half";
     private static Account receiverAccount = new Account(Networks.testnet(), receiverMnemonic);
-    private static String compiledCode = "590169010100323232323232323225333002323232323253330073370e900118049baa0011323232533300a3370e900018061baa005132533300f00116132533333301300116161616132533301130130031533300d3370e900018079baa004132533300e3371e6eb8c04cc044dd5004a4410d48656c6c6f2c20576f726c642100100114a06644646600200200644a66602a00229404c94ccc048cdc79bae301700200414a2266006006002602e0026eb0c048c04cc04cc04cc04cc04cc04cc04cc04cc040dd50051bae301230103754602460206ea801054cc03924012465787065637420536f6d6528446174756d207b206f776e6572207d29203d20646174756d001616375c0026020002601a6ea801458c038c03c008c034004c028dd50008b1805980600118050009805001180400098029baa001149854cc00d2411856616c696461746f722072657475726e65642066616c736500136565734ae7155ceaab9e5573eae855d12ba401";
+    private static String compiledCode = "59019a01010032323232323232323225333003323232323253330083370e900118051baa001132323253333330120051533300b3370e900018069baa005132533301000100b132533333301400100c00c00c00c132533301230140031533300e3370e900018081baa004132533300f3371e6eb8c050c048dd5004a450d48656c6c6f2c20576f726c642100100114a06644646600200200644a66602c00229404c94ccc04ccdc79bae301800200414a226600600600260300026eb0c04cc050c050c050c050c050c050c050c050c044dd50051bae301330113754602660226ea801054cc03d24012a65787065637420536f6d6528446174756d207b2062656e6566696369617279207d29203d20646174756d001600d375c0026022002601c6ea8014028028028028028c03cc040008c038004c02cdd50008b1806180680118058009805801180480098031baa001149854cc0112411856616c696461746f722072657475726e65642066616c73650013656153300249011272656465656d65723a2052656465656d657200165734ae7155ceaab9e5573eae855d12ba41";
     private static PlutusScript plutusScript = PlutusBlueprintUtil.getPlutusScriptFromCompiledCode(compiledCode, PlutusVersion.v3);
     private static String scriptAddress = AddressProvider.getEntAddress(plutusScript, Networks.testnet()).toBech32();
     private static TestHelper testHelper;
@@ -93,11 +93,11 @@ public class SmartContractTest {
         System.out.println("================================================");
         System.out.println("Test lock_lovelace");
         String senderAddress = senderAccount.baseAddress();
-        log.info("Sender address : " + senderAddress);
+        System.out.println("Sender address: " + senderAddress);
         senderBalanceBefore = testHelper.lovelaceBalance(senderAddress);
         System.out.println("sender balance before: " + senderBalanceBefore);
 
-        log.info("Script address : " + scriptAddress);
+        System.out.println("Script address: " + scriptAddress);
         scriptBalanceBefore = testHelper.assetBalance(scriptAddress, LOVELACE);
         System.out.println("script balance before: " + scriptBalanceBefore);
 
@@ -115,7 +115,7 @@ public class SmartContractTest {
                 .withSigner(SignerProviders.signerFrom(senderAccount))
                 .completeAndWait(System.out::println);
         
-        System.out.println("Transaction result: " + JsonUtil.getPrettyJson(result));
+        log.info("lock_lovelace result: " + JsonUtil.getPrettyJson(result));
         System.out.println("Sender address after: " + testHelper.assetBalance(senderAddress, LOVELACE));
         System.out.println("Script address after: " + testHelper.assetBalance(scriptAddress, LOVELACE));
 
@@ -133,11 +133,11 @@ public class SmartContractTest {
         System.out.println("================================================");
         System.out.println("Test unlock_lovelace");
         String recieverAddress = receiverAccount.baseAddress();
-        log.info("Receiver address : " + recieverAddress);
+        System.out.println("Receiver address : " + recieverAddress);
         receiverBalanceBefore = testHelper.lovelaceBalance(recieverAddress);
         System.out.println("Receiver balance before: " + receiverBalanceBefore);
 
-        log.info("Script address : " + scriptAddress);
+        System.out.println("Script address : " + scriptAddress);
         scriptBalanceBefore = testHelper.assetBalance(scriptAddress, LOVELACE);
         System.out.println("script balance before: " + scriptBalanceBefore);
 
@@ -150,21 +150,21 @@ public class SmartContractTest {
         PlutusData redeemer = ConstrPlutusData.of(0, BytesPlutusData.of("Hello, World!"));
 
         // Build transaction
-        ScriptTx sctipTx = new ScriptTx()
+        ScriptTx scriptTx = new ScriptTx()
                 .collectFrom(scriptUtxo, redeemer)
                 .payToAddress(receiverAccount.baseAddress(), adaAmount)
                 .attachSpendingValidator(plutusScript);
         QuickTxBuilder quickTxBuilder = new QuickTxBuilder(backendService);
         
         // Sign and submit transaction
-        Result<String> result = quickTxBuilder.compose(sctipTx)
+        Result<String> result = quickTxBuilder.compose(scriptTx)
                 .feePayer(receiverAccount.baseAddress())
                 .collateralPayer(receiverAccount.baseAddress())
                 .withSigner(SignerProviders.signerFrom(receiverAccount))
                 .withRequiredSigners(receiverAccount.getBaseAddress())
                 .completeAndWait(System.out::println);
 
-        System.out.println("Transaction result: " + JsonUtil.getPrettyJson(result));
+        log.info("unlock_lovelace: " + JsonUtil.getPrettyJson(result));
         System.out.println("Receiver address after: " + testHelper.assetBalance(recieverAddress, LOVELACE));
         System.out.println("Script address after: " + testHelper.assetBalance(scriptAddress, LOVELACE));
 

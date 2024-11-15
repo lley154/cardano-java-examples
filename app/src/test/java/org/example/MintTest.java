@@ -61,11 +61,11 @@ public class MintTest {
     void mint_transfer_asset() throws Exception {
     
         String senderAddress = senderAccount.baseAddress();
-        log.info("Sender address : " + senderAddress);
+        System.out.println("Sender address: " + senderAddress);
         System.out.println("sender balance before: " + testHelper.lovelaceBalance(senderAddress));
 
         String receiverAddress = receiverAccount.baseAddress();
-        log.info("Receiver address : " + receiverAddress);
+        System.out.println("Receiver address: " + receiverAddress);
         
         Policy policy = PolicyUtil.createMultiSigScriptAllPolicy("policy", 1);
         String assetName1 = "abc";
@@ -118,7 +118,7 @@ public class MintTest {
         
         // wait for transaction to be included in the blockchain
         Thread.sleep(2000);
-        System.out.println("Transaction result: " + JsonUtil.getPrettyJson(result));
+        log.info("mint_transfer_asset: " + JsonUtil.getPrettyJson(result));
         
         BigInteger receiverBalanceAfterAsset1 = testHelper.assetBalance(receiverAddress, unit1);
         BigInteger receiverBalanceAfterAsset2 = testHelper.assetBalance(receiverAddress, unit2);
