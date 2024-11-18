@@ -152,5 +152,175 @@ $ cursor .
 
 
 ## Transaction Testing
+### Download cardano-java-example
+- Close the cursor IDE, and start in a new directory to download the cardano-java-example github repo
+```
+$ git clone https://github.com/lley154/cardano-java-examples.git
+$ cd cardano-java-examples
+$ cursor .
+```
+
+- After launching ```cursor```, the IDE will compile the java files inside the project.  This may take a few minutes to complete.  Then, navigate to one of the test files to see test cases.
+
+### Install docker (if not already installed)
+```sudo apt -y install apt-transport-https ca-certificates curl software-properties-common```
+
+```curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo gpg --dearmor -o /usr/share/keyrings/docker-archive-keyring.gpg```
+
+```echo "deb [arch=amd64 signed-by=/usr/share/keyrings/docker-archive-keyring.gpg] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable" | sudo tee /etc/apt/sources.list.d/docker.list > /dev/null```
+
+```sudo apt update```
+
+```sudo apt -y install docker-ce docker-ce-cli containerd.io```
+
+```sudo usermod -aG docker $USER```
+
+```newgrp docker ```
+
+```docker run hello-world```
+
+- Check that docker is running.
+```
+$ sudo systemctl status docker
+● docker.service - Docker Application Container Engine
+     Loaded: loaded (/lib/systemd/system/docker.service; disabled; vendor preset: enabled)
+     Active: active (running) since Mon 2024-11-18 10:07:54 EST; 4s ago
+TriggeredBy: ● docker.socket
+       Docs: https://docs.docker.com
+   Main PID: 1789814 (dockerd)
+      Tasks: 10
+     Memory: 102.0M
+     CGroup: /system.slice/docker.service
+             └─1789814 /usr/bin/dockerd -H fd:// --containerd=/run/containerd/containerd.sock
+
+```
+
+### Install Yaci DevKit
+- Go to Yaci DevKit Github repo and download v0.9.3-beta release
+https://github.com/bloxbean/yaci-devkit/releases/tag/v0.9.3-beta 
+- Unzip the zip file and go into the directory
+
+```$ cd yaci-devkit-0.9.3-beta```
+
+- Edit the env file and make sure both ogmios and kupo are enabled.
+  
+```$ more ./config/env 
+yaci_store_enabled=true
+ogmios_enabled=true
+kupo_enabled=true
+...
+```
+
+- Run the startup script
+
+```
+$ ./bin/devkit.sh start
+Attempting to start the service...
+docker-compose not found, let's try 'docker compose'
+[+] Running 2/0
+ ✔ Container node1-yaci-viewer-1  Running                                                   0.0s 
+ ✔ Container node1-yaci-cli-1     Running                                                   0.0s 
+Docker Compose started successfully.
+...
+```
+
+- Create a conway node network
+
+```yaci-cli:>create-node -o --era conway```
+
+- And then start it
+
+```
+devnet:default>start
+...
+Waiting for Yaci Store to start ...
+Waiting for Yaci Store to start ...
+[💡 OK] Yaci Store Started
+```
+
+- Select tip to confirm the network is running
+
+```
+devnet:default>tip
+[✅ Block#] 95
+[✅ Slot#] 696
+[✅ Block Hash] 42b557096ee7e4460a9f3990163bd0809d19d4f68ad9592be3185079325c1efe
+```
+### Testing the Java transactions
+- With the Yaci Devkit running, run the transaction test case
+  
+```gradle -Dtest.single=org.example.TransactionTest```
+
+- in the terminal window, and you will get the following error:
+
+![image](https://github.com/user-attachments/assets/ebe83d6d-7590-45cf-8862-add5504853bd)
+
+- Go to the test reports to see what the error is
+![image](https://github.com/user-attachments/assets/e13e7ba7-307a-4ef7-9b26-a2eb629cc906)
+
+- We see that there is insufficient funds, so we need to add some fund to the account trying to transfer Ada.
+
+```
+devnet:default>topup addr_test1qq8phk43ndg0zf2l4xc5vd7gu4f85swkm3dy7fjmfkf6q249ygmm3ascevccsq5l5ym6khc3je5plx9t5vsa06jvlzls8el07z 7000
+[💡 Txn Cbor] 84a40081825820347e9d3c72ddc52bdb43cf1c44d31507983c102e870398b9205fb8ed125f7e64000182825839000e1bdab19b50f1255fa9b14637c8e5527a41d6dc5a4f265b4d93a02aa52237b8f618cb3188029fa137ab5f1196681f98aba321d7ea4cf8bf1b00000001a13b860082581d60a0f1aa7dca95017c11e7e373aebcf0c4568cf47ec12b94f8eb5bba8b1b000aa87a4d156437021a000295c907582024ff08a7f728937e5d01cc55619870ba457d17c94659637acabc5584f9dc440da100818258209b0ee7e26318d3675742c8b841b981ae57c37bcbb2cc5625f80606b3256d08145840ae757f89e921e76473b2e4f396b290de5742dc8adb721e8a35bf62da110b16aac88f6bf86061cb24d55c8820cf6723a6db8ebd1a896d16639a0dfe036f1ace05f5a11902a2a1636d7367816a546f7075702046756e64
+✅ Transaction submitted successfully
+Waiting for tx to be included in block...
+Waiting for tx to be included in block...
+[💡 Txn# : ] 1fc75a66df8bd9a3ef8d7a11b4ab874dcfeb4bbf61af7dcc602cdaa679cf2959
+Waiting for next block...
+💡 Available utxos
+
+1. 1fc75a66df8bd9a3ef8d7a11b4ab874dcfeb4bbf61af7dcc602cdaa679cf2959#0 : [Amount(unit=lovelace, quantity=7000000000)]
+--------------------------------------------------------------------------------------
+devnet:default>
+```
+
+- Now, when running the test case, it passes.
+
+![image](https://github.com/user-attachments/assets/f2997271-3944-4792-b641-963f8ea7cdf9)
+
+- To run all of the test cases
+- To see the transactions, use the DevKit explorer and the info to get the URL.
+
+```
+devnet:default>info
+
+###### Node Details (Container) ######
+[💡 Node port] 3001
+[💡 Node Socket Paths] 
+/clusters/nodes/default/node/node.sock
+[💡 Submit Api Port] 8090
+[💡 Protocol Magic] 42
+[💡 Block Time] 1.0 sec
+[💡 Slot Length] 1.0 sec
+[💡 Start Time] 1731945662
+[💡 Epoch Length] 600
+[💡 Security Param] 300
+[💡 SlotsPerKESPeriod] 129600
+
+
+#################### URLS (Host) ####################
+[💡 Yaci Viewer] http://localhost:5173
+[💡 Yaci Store Swagger UI] http://localhost:8080/swagger-ui.html
+[💡 Yaci Store Api URL] http://localhost:8080/api/v1/
+[💡 Pool Id] pool1wvqhvyrgwch4jq9aa84hc8q4kzvyq2z3xr6mpafkqmx9wce39zy
+
+
+#################### Other URLS ####################
+[💡 Ogmios Url (Optional)] ws://localhost:1337
+[💡 Kupo Url   (Optional)] http://localhost:1442
+
+
+#################### Node Ports ####################
+[💡 n2n port] localhost:3001
+[💡 n2c port (socat)] localhost:3333
+devnet:default>
+```
+![image](https://github.com/user-attachments/assets/1173799c-71df-41e2-8925-d150ba9ed264)
+
+
+
+
+
 
 
