@@ -1,13 +1,13 @@
 # Cardano Java Examples
 ## Environment Setup - Ubuntu Linux 20.04 LTS
 ### SDKMAN!
-Got to https://sdkman.io/ for more information on managing JDKs on your computer
+- Got to https://sdkman.io/ for more information on managing JDKs on your computer
 
-Run the command in your terminal window 
+- Run the command in your terminal window 
 
 ```curl -s "https://get.sdkman.io" | bash```
 
-Please close your terminal window and re-open it to make sure environment variables are set correctly. 
+- Please close your terminal window and re-open it to ensure environment variables are set correctly. 
 
 ### Install Java
 ```sdk list java```
@@ -97,6 +97,40 @@ $ tree .
 ```
 
 ## IDE Setup
+### Installing cursor
+- Go to https://www.cursor.com/ and download the executable.
+- Move the executable to ```/usr/local/bin``` directory
+  
+```
+$ sudo mv ~/Downloads/cursor-0.42.5x86_64.AppImage /usr/local/bin/
+```
+
+- Change the permissions to make the file an executable
+  
+```
+$ sudo chmod u+x /usr/local/bin/cursor-0.42.5x86_64.AppImage
+```
+
+- Create a symbolic link for ```cursor```
+  
+```
+$ sudo ln -s /usr/local/bin/cursor-0.42.5x86_64.AppImage /usr/local/bin/cursor
+```
+```
+$ ls -l /usr/local/bin/
+total 904668
+lrwxrwxrwx 1 root  root  43 Nov 18 08:28 cursor -> /usr/local/bin/cursor-0.42.5x86_64.AppImage
+
+```
+- Go into your java test example directory
+```
+$ cd ~/src/java-example
+```
+
+- Launch cursor
+```
+$ cursor .
+```
 
 
 ## Transaction Testing
