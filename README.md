@@ -1,6 +1,6 @@
 # Cardano Java Examples
 ## Environment Setup - Ubuntu Linux 20.04 LTS
-### SDKMAN!
+### Install SDKMAN!
 - Got to https://sdkman.io/ for more information on managing JDKs on your computer
 
 - Run the command in your terminal window 
@@ -28,7 +28,7 @@ $ javac --version
 javac 23
 ```
 
-### Instal gradle
+### Install gradle
 
 ```sdk list gradle```
 
@@ -250,7 +250,7 @@ devnet:default>tip
 ### Testing the Java transactions
 - With the Yaci Devkit running, run the transaction test case
   
-```gradlew test --tests org.example.TransactionTest```
+```./gradlew test --tests org.example.TransactionTest```
 
 - in the terminal window, and you will get the following error:
 
@@ -281,6 +281,11 @@ devnet:default>
 ![image](https://github.com/user-attachments/assets/f2997271-3944-4792-b641-963f8ea7cdf9)
 
 - To run all of the test cases
+
+```
+./gradlew clean test
+```
+
 - To see the transactions, use the DevKit explorer and the info to get the URL.
 
 ```
