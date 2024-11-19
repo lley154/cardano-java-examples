@@ -140,7 +140,7 @@ $ cursor .
 
 ![image](https://github.com/user-attachments/assets/5e20ee0f-4502-4075-ad78-c33ae5711374)
 
-- Install Extension Pack for Java if not installed
+- Install **Extension Pack for Java** if not installed
 - In the top bar navigation, select ```Terminal -> New Terminal``` for a new terminal window
 - Then, navigate to and open ```App.java``` file that was generated when the project was initialized.
 - In the terminal window, run the program using ```gradlew run```
