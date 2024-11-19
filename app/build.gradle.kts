@@ -42,9 +42,6 @@ dependencies {
     // lombok
     testCompileOnly("org.projectlombok:lombok:1.18.24")
     testAnnotationProcessor("org.projectlombok:lombok:1.18.24")
-
-    // yaci-cardano-test
-    testImplementation(libs.yaci.cardano.test)
     
 }
 
