@@ -145,11 +145,13 @@ $ cursor .
 - Then, navigate to and open ```App.java``` file that was generated when the project was initialized.
 - In the terminal window, run the program using ```./gradlew run```
 
-![image](https://github.com/user-attachments/assets/bd1e050d-3bad-4369-b136-6544c36b80ba)
+![image](https://github.com/user-attachments/assets/ec55e510-46e7-4117-a588-34b230f0a0d3)
+
+
 
 - Navigate to the test case file and run the test case in the terminal window using ```./gradlew clean test```. If all goes well, you should see the following.
 
-![image](https://github.com/user-attachments/assets/2d48ecb6-e8cb-44b4-afe1-dde95385cc57)
+![image](https://github.com/user-attachments/assets/575dd73c-271a-45a7-9963-9834863d0fa8)
 
 
 ## Transaction Testing
