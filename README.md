@@ -136,18 +136,18 @@ $ cursor .
 
 - Import VS code extensions if you already use VS Code or start from scratch.
 - Create an account and log in
-- Enable the AI agent by selecting the toggle AI Pane on the top right.
+- Install **Extension Pack for Java** if not installed
+- Access the AI agent by selecting the toggle AI Pane on the top right.
 
 ![image](https://github.com/user-attachments/assets/5e20ee0f-4502-4075-ad78-c33ae5711374)
 
-- Install **Extension Pack for Java** if not installed
 - In the top bar navigation, select ```Terminal -> New Terminal``` for a new terminal window
 - Then, navigate to and open ```App.java``` file that was generated when the project was initialized.
-- In the terminal window, run the program using ```gradlew run```
+- In the terminal window, run the program using ```./gradlew run```
 
 ![image](https://github.com/user-attachments/assets/bd1e050d-3bad-4369-b136-6544c36b80ba)
 
-- Navigate to the test case file and run the test case in the terminal window using ```gradlew clean test```. If all goes well, you should see the following.
+- Navigate to the test case file and run the test case in the terminal window using ```./gradlew clean test```. If all goes well, you should see the following.
 
 ![image](https://github.com/user-attachments/assets/2d48ecb6-e8cb-44b4-afe1-dde95385cc57)
 
