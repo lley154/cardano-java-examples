@@ -41,7 +41,7 @@ javac 23
 $ gradle init --type java-application  --dsl kotlin
 ```
 ```
-Enter target Java version (min: 7, default: 21): 21
+Enter target Java version (min: 7, default: 21): 23
 
 Project name (default: java-example): java-example
 
